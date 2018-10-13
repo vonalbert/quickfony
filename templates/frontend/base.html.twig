@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('build/app.css') }}" />
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    <header>
+        {{- include('frontend/_header.html.twig') -}}
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        {{- include('frontend/_footer.html.twig') -}}
+    </footer>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('build/app.js') }}"></script>
+{% endblock %}
+</body>
+</html>
