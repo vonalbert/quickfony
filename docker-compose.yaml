@@ -1,0 +1,38 @@
+version: '3.4'
+
+volumes:
+    database: ~
+
+services:
+    app:
+        build:
+            context: .
+            target: application
+        depends_on:
+            - database
+
+    server:
+        build:
+            context: .
+            target: webserver
+        depends_on:
+            - app
+
+    reverse-proxy:
+        image: traefik:1.7-alpine
+        command: --docker
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+            - "80"
+            - "443"
+
+    database:
+        image: mysql:5.7
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: "true"
+            MYSQL_USER: web
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: app_database
+        volumes:
+            - database:/var/lib/mysql

@@ -1,0 +1,26 @@
+# Exclude all the files not needed in the production image
+# This has effect only in copy commands, not in volumes
+
+
+# Remove ide metadata
+.idea*
+nbproject*
+
+# Development files & build tools
+.env*
+.git*
+.editorconfig
+.dockerignore
+docker-compose*.yaml
+Dockerfile*
+Makefile
+
+# Vendors & built assets
+node_modules/*
+public/bundles/*
+public/build/*
+vendor/*
+
+# Runtime files
+var/cache/*
+var/log/*

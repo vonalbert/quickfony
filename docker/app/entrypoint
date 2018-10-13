@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+DOCKER_BUILD_ENVIRONMENT=${DOCKER_BUILD_ENVIRONMENT:-prod}
+
+# Execute this code at container start ($1 is php-fpm)
+# or when trying to execute a symfony command
+if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
+    if [ ${DOCKER_BUILD_ENVIRONMENT} != 'prod' ]; then
+        # When not in production install and build the application for dev
+        # In production just keep the version installed thought copy in dockerfile
+        if [ ! -f vendor/autoload.php ]; then
+            composer install --prefer-dist --no-progress --no-suggest --no-interaction
+        fi
+
+        if [ ! -d vendor/autoload.php ]; then
+            yarn install
+        fi
+
+        if [ ! -f public/build/manifest.json ]; then
+            yarn run dev
+        fi
+    else
+        # Manually run post-install scripts here because of --no-scripts in dockerfile
+        composer run-script post-install-cmd
+    fi
+
+    # Update the database schema to the last version
+    wait-service MySQL database:3306
+    bin/console doctrine:schema:update --force
+fi
+
+# When container is ready to run proceed with the required command
+docker-php-entrypoint "$@"
