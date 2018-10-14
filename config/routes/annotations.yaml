@@ -1,3 +1,4 @@
-controllers:
-    resource: ../../src/Controller/
+site_controllers:
+    resource: ../../src/Controller/Frontend
     type: annotation
+    prefix: /
