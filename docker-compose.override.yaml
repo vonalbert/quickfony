@@ -42,5 +42,3 @@ services:
             PMA_ABSOLUTE_URI: http://db.${HOST}
         labels:
             - "traefik.frontend.rule=Host: db.${HOST}"
-        ports:
-            - "3354:3354"
