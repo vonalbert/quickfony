@@ -14,18 +14,18 @@ services:
             - ./docker/server/nginx.conf:/etc/nginx/conf.d/default.conf:ro
             - ./public:/application/public:ro
         labels:
-            - "traefik.frontend.rule=Host: ${HOST}, www.${HOST}"
+            - "traefik.frontend.rule=Host: app.localhost"
 
     reverse-proxy:
         command: --api --docker
         ports:
-            - "${PORT}:80"  # server port
+            - "80:80"       # server port
             - "8080:8080"   # traefik web ui port - activated by --api
 
     mailhog:
         image: mailhog/mailhog
         labels:
-            - "traefik.frontend.rule=Host: mail.${HOST}"
+            - "traefik.frontend.rule=Host: mail.app.localhost"
             - "traefik.port=8025"
 
     database:
@@ -39,6 +39,6 @@ services:
             PMA_USER: web
             PMA_PASSWORD: password
             PMA_HOST: database
-            PMA_ABSOLUTE_URI: http://db.${HOST}
+            PMA_ABSOLUTE_URI: http://db.app.localhost
         labels:
-            - "traefik.frontend.rule=Host: db.${HOST}"
+            - "traefik.frontend.rule=Host: db.app.localhost"

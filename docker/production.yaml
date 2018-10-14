@@ -21,7 +21,7 @@ services:
     server:
         restart: always
         labels:
-            - "traefik.frontend.rule=Host: ${HOST}, www.${HOST}"
+            - "traefik.frontend.rule=Host: app.localhost, www.app.localhost"
 
     database:
         restart: always
