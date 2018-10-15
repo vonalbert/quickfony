@@ -55,7 +55,7 @@ cc: 																													## Clear cache
 	@-$(SF) cache:clear
 
 db-update:																												## Update the database schema
-	@-$(SF) doctrine:schema:update --force
+	@-$(SF) doctrine:migrations:migrate --no-interaction
 
 db-load:																												## Load fixtures into the database
 	@-$(SF) doctrine:fixtures:load --no-interaction

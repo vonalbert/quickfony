@@ -28,7 +28,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
 
     # Update the database schema to the last version
     wait-service MySQL database:3306
-    bin/console doctrine:schema:update --force
+    bin/console doctrine:migrations:migrate --no-interaction
 fi
 
 # When container is ready to run proceed with the required command
