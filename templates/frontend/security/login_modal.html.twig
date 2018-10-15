@@ -1,0 +1,22 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        {{ form_start(form) }}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_errors(form) }}
+                {{ form_rest(form) }}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+

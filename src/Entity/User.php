@@ -8,6 +8,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
+ *
+ * @author Alberto Avon<alberto.avon@gmail.com>
  */
 class User implements UserInterface, \Serializable
 {
@@ -137,7 +139,7 @@ class User implements UserInterface, \Serializable
     }
 
 
-    public function getEnabled(): ?bool
+    public function isEnabled(): ?bool
     {
         return $this->enabled;
     }
