@@ -1,18 +1,20 @@
 #!/usr/bin/env sh
 
-DOCKER_BUILD_ENVIRONMENT=${DOCKER_BUILD_ENVIRONMENT:-prod}
+# If the .env file was not imported by docker-compose,
+# consider the application as dev by default.
+APP_ENV=${APP_ENV:-dev}
 
 # Execute this code at container start ($1 is php-fpm)
 # or when trying to execute a symfony command
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
-    if [ ${DOCKER_BUILD_ENVIRONMENT} != 'prod' ]; then
+    if [ ${APP_ENV} != 'prod' ]; then
         # When not in production install and build the application for dev
         # In production just keep the version installed thought copy in dockerfile
         if [ ! -f vendor/autoload.php ]; then
             composer install --prefer-dist --no-progress --no-suggest --no-interaction
         fi
 
-        if [ ! -d vendor/autoload.php ]; then
+        if [ ! -d node_modules ]; then
             yarn install
         fi
 
