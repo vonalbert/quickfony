@@ -19,3 +19,8 @@ services:
     App\Controller\:
         resource: '%kernel.root_dir%/Controller'
         tags: ['controller.service_arguments']
+
+    # Menu builders
+    App\Menu\MainMenuBuilder:
+        tags:
+            - { name: knp_menu.menu_builder, method: createMenu, alias: main_menu }

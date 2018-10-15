@@ -4,3 +4,6 @@ require('../scss/app.scss');
 // Require base plugins
 require('arrive');
 require('bootstrap');
+
+// Require application modules
+require('./modules/login');

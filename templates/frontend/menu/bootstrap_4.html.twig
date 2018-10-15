@@ -1,0 +1,18 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% block root %}
+    {%- do item.setChildrenAttribute('class', item.childrenAttribute('class') ~ ' navbar-nav') -%}
+
+    {% if options.id is defined %}
+        {%- do item.setChildrenAttribute('id', item.childrenAttribute('id') ~ options.id) -%}
+    {% endif %}
+
+    {%- set options = options|merge({currentClass: 'active', leaf_class: 'nav-item'}) -%}
+    {{ parent() }}
+{% endblock %}
+
+{% block item %}
+    {%- do item.setLinkAttribute('class', item.linkAttribute('class') ~ ' nav-link') -%}
+    {%- do item.setLabelAttribute('class', item.labelAttribute('class') ~ ' nav-link disabled') -%}
+    {{ parent() }}
+{% endblock %}
