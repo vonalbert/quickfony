@@ -4,8 +4,6 @@ services:
     app:
         links:
             - mailhog:emails
-        environment:
-            DOCKER_BUILD_ENVIRONMENT: dev
         volumes:
             - .:/application:rw,cached
 
