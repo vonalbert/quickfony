@@ -19,8 +19,8 @@ services:
     reverse-proxy:
         command: --api --docker
         ports:
-            - "80:80"       # server port
-            - "8080:8080"   # traefik web ui port - activated by --api
+            - "80"      # server port
+            - "8080"    # traefik web ui port - activated by --api
 
     mailhog:
         image: mailhog/mailhog
@@ -30,7 +30,7 @@ services:
 
     database:
         ports:
-            - "3306:3306"
+            - "3306"
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin

@@ -14,7 +14,7 @@ help:
 # ------------------------------------------------------
 # Environment control
 # ------------------------------------------------------
-.PHONY: start stop build logs sh clean permissions restart
+.PHONY: start stop build logs ports sh clean permissions restart
 
 start: .env																												## Startup for development docker services
 	@-$(COMPOSE) up -d --remove-orphans
@@ -27,6 +27,11 @@ build: .env																												## Rebuild docker containers
 
 logs:																													## Create and start docker containers in foreground
 	@-$(COMPOSE) logs -f || true
+
+ports:																													## Show ports used by the application. Require running containers.
+	@-echo "Web-app:  $(shell $(COMPOSE) port reverse-proxy 80 | sed "s/0.0.0.0://")"
+	@-echo "Traefik:  $(shell $(COMPOSE) port reverse-proxy 8080 | sed "s/0.0.0.0://")"
+	@-echo "Database: $(shell $(COMPOSE) port database 3306 | sed "s/0.0.0.0://")"
 
 sh:																														## Get access to the shell of the app container
 	@-$(EXEC) bash || true
