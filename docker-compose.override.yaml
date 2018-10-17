@@ -14,10 +14,9 @@ services:
         labels:
             - "traefik.frontend.rule=Host: app.localhost"
 
-    reverse-proxy:
+    traefik:
         command: --api --docker
         ports:
-            - "80"      # server port
             - "8080"    # traefik web ui port - activated by --api
 
     mailhog:

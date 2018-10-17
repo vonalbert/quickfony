@@ -2,7 +2,9 @@ COMPOSE=docker-compose
 CMD=docker run --rm -v $(shell pwd):/app -w /app busybox
 RUN=$(COMPOSE) run --rm app
 EXEC=$(COMPOSE) exec app
+PORT=$(COMPOSE) port
 SF=$(EXEC) bin/console
+DOMAIN=app.localhost
 
 .PHONY: help
 
@@ -14,7 +16,7 @@ help:
 # ------------------------------------------------------
 # Environment control
 # ------------------------------------------------------
-.PHONY: start stop build logs ports sh clean permissions restart
+.PHONY: start stop build logs info sh clean permissions restart
 
 start: .env																												## Startup for development docker services
 	@-$(COMPOSE) up -d --remove-orphans
@@ -28,10 +30,16 @@ build: .env																												## Rebuild docker containers
 logs:																													## Create and start docker containers in foreground
 	@-$(COMPOSE) logs -f || true
 
-ports:																													## Show ports used by the application. Require running containers.
-	@-echo "Web-app:  $(shell $(COMPOSE) port reverse-proxy 80 | sed "s/0.0.0.0://")"
-	@-echo "Traefik:  $(shell $(COMPOSE) port reverse-proxy 8080 | sed "s/0.0.0.0://")"
-	@-echo "Database: $(shell $(COMPOSE) port database 3306 | sed "s/0.0.0.0://")"
+info:																													## Show the urls of the containers public services
+	@-echo "-- Application --"
+	@-echo "http://$(shell $(PORT) traefik 80 | sed "s/0.0.0.0/$(DOMAIN)/")"
+	@-echo "https://$(shell $(PORT) traefik 443 | sed "s/0.0.0.0/$(DOMAIN)/")"
+	@-echo ""
+	@-echo "-- Other services --"
+	@-echo "Traefik WEB UI: http://$(shell $(PORT) traefik 8080 | sed "s/0.0.0.0/localhost/")"
+	@-echo "DB admin:       http://$(shell $(PORT) traefik 80 | sed "s/0.0.0.0/db.$(DOMAIN)/")"
+	@-echo "DB port:        $(shell $(PORT) database 3306 | sed "s/0.0.0.0://")"
+	@-echo "SMTP debug:     http://$(shell $(PORT) traefik 80 | sed "s/0.0.0.0/mail.$(DOMAIN)/")"
 
 sh:																														## Get access to the shell of the app container
 	@-$(EXEC) bash || true
