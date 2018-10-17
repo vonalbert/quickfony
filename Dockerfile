@@ -58,3 +58,28 @@ WORKDIR /application
 
 COPY docker/server/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=application /application/public ./public
+
+
+
+# -------------------------------------------------------------
+# Reverse proxy setup
+# -------------------------------------------------------------
+# -- for production
+FROM traefik:1.7-alpine AS reverse_proxy
+
+
+# -- for development -- with a self signed certificate
+FROM alpine:latest AS self_signed_certificate_generation
+
+RUN apk add --no-cache openssl
+RUN openssl genrsa -des3 -passout pass:NotSecure -out server.pass.key 2048
+RUN openssl rsa -passin pass:NotSecure -in server.pass.key -out server.key
+RUN rm server.pass.key
+RUN openssl req -new -passout pass:NotSecure -key server.key -out server.csr \
+    -subj '/C=SS/ST=SS/L=Gotham City/O=Symfony/CN=localhost'
+RUN openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
+
+
+FROM reverse_proxy AS reverse_proxy_dev
+
+COPY --from=self_signed_certificate_generation server.key server.crt /etc/traefik/

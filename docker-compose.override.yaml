@@ -13,8 +13,12 @@ services:
             - ./public:/application/public:ro
         labels:
             - "traefik.frontend.rule=Host: app.localhost"
+            - "traefik.port=80"
 
     traefik:
+        build:
+            context: .
+            target: reverse_proxy_dev
         command: --api --docker
         ports:
             - "8080"    # traefik web ui port - activated by --api

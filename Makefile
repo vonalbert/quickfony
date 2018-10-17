@@ -32,8 +32,8 @@ logs:																													## Create and start docker containers in foreg
 
 info:																													## Show the urls of the containers public services
 	@-echo "-- Application --"
-	@-echo "http://$(shell $(PORT) traefik 80 | sed "s/0.0.0.0/$(DOMAIN)/")"
 	@-echo "https://$(shell $(PORT) traefik 443 | sed "s/0.0.0.0/$(DOMAIN)/")"
+	@-echo "http://$(shell $(PORT) traefik 80 | sed "s/0.0.0.0/$(DOMAIN)/")"
 	@-echo ""
 	@-echo "-- Other services --"
 	@-echo "Traefik WEB UI: http://$(shell $(PORT) traefik 8080 | sed "s/0.0.0.0/localhost/")"
