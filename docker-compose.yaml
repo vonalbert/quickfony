@@ -10,6 +10,10 @@ services:
             target: application
         depends_on:
             - database
+        links:
+            - mailhog:emails
+        volumes:
+            - .:/application:rw,cached
 
     server:
         build:
@@ -17,18 +21,26 @@ services:
             target: webserver
         depends_on:
             - app
+        volumes:
+            - ./docker/server/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./public:/application/public:ro
+        labels:
+            - "traefik.frontend.rule=Host: app.localhost"
+            - "traefik.port=80"
+
 
     traefik:
         build:
             context: .
-            target: reverse_proxy
-        command: --docker
+            target: reverse_proxy_dev
+        command: --api --docker
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./docker/traefik/traefik.toml:/etc/traefik/traefik.toml
         ports:
             - "80"
             - "443"
+            - "8080"    # traefik web ui port - activated by --api
 
     database:
         image: mysql:5.7
@@ -39,3 +51,22 @@ services:
             MYSQL_DATABASE: app_database
         volumes:
             - database:/var/lib/mysql
+        ports:
+            - "3306"
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_ARBITRARY: 1
+            PMA_USER: web
+            PMA_PASSWORD: password
+            PMA_HOST: database
+            PMA_ABSOLUTE_URI: http://db.app.localhost
+        labels:
+        - "traefik.frontend.rule=Host: db.app.localhost"
+
+    mailhog:
+        image: mailhog/mailhog
+        labels:
+        - "traefik.frontend.rule=Host: mail.app.localhost"
+        - "traefik.port=8025"
